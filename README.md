@@ -115,29 +115,29 @@ https://github.com/YouAreOnlyOne/MySqlite/blob/master/source/mysqlite-release.aa
 ## 插入数据
 
 	Person person2=new Person();
-      person2.setName("Frank2");
-      person2.setPassword("5202");
-      baseDao.insert(person2);
+     person2.setName("Frank2");
+     person2.setPassword("5202");
+     baseDao.insert(person2);
 	       
 ## 查询数据
 
 	Person where=new Person();
-      where.setName("Frank");
-      List<Person> list=baseDao.query(where);
+     where.setName("Frank");
+     List<Person> list=baseDao.query(where);
 
 ## 更新数据
 
 	Person where=new Person();
-      where.setName("Frank");
-      Person person=new Person();
-      person.setPassword("52014");
-      long result=baseDao.update(person,where);
+     where.setName("Frank");
+     Person person=new Person();
+     person.setPassword("52014");
+     long result=baseDao.update(person,where);
 
 ## 删除数据
 
 	Person where=new Person();
-      where.setName("Frank");
-      long result=baseDao.delete(where);
+     where.setName("Frank");
+     long result=baseDao.delete(where);
 	
 	
 
