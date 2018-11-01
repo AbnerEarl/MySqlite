@@ -73,13 +73,13 @@ https://github.com/YouAreOnlyOne/MySqlite/blob/master/source/mysqlite-release.aa
 1、首先新建一个实体类Person，采用注解的方式进行，如下所示：
 	
 	@DbTable("tb_person")
-public class Person {
-    @DbFiled("tb_name")
-    public String name;
-    @DbFiled("tb_password")
-    public String password;
-    @DbFiled("tb_photo")
-    public byte[] photo;
+	public class Person {
+   	@DbFiled("tb_name")
+   	public String name;
+    	@DbFiled("tb_password")
+    	public String password;
+    	@DbFiled("tb_photo")
+    	public byte[] photo;
 
     public String getName() {
         return name;
@@ -115,29 +115,29 @@ public class Person {
 ## 插入数据
 
 	Person person2=new Person();
-               person2.setName("Frank2");
-               person2.setPassword("5202");
-               baseDao.insert(person2);
+        person2.setName("Frank2");
+        person2.setPassword("5202");
+        baseDao.insert(person2);
 	       
 ## 查询数据
 
 	Person where=new Person();
-               where.setName("Frank");
-               List<Person> list=baseDao.query(where);
+        where.setName("Frank");
+        List<Person> list=baseDao.query(where);
 
 ## 更新数据
 
 	Person where=new Person();
-                where.setName("Frank");
-                Person person=new Person();
-                person.setPassword("52014");
-                long result=baseDao.update(person,where);
+        where.setName("Frank");
+        Person person=new Person();
+        person.setPassword("52014");
+        long result=baseDao.update(person,where);
 
 ## 删除数据
 
 	Person where=new Person();
-                where.setName("Frank");
-                long result=baseDao.delete(where);
+        where.setName("Frank");
+        long result=baseDao.delete(where);
 	
 	
 
