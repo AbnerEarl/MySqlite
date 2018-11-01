@@ -4,23 +4,17 @@
 
 # 最新版本
 
-版本号：[![](https://www.jitpack.io/v/YouAreOnlyOne/LoadApp.svg)](https://www.jitpack.io/#YouAreOnlyOne/LoadApp)
+版本号：[![](https://www.jitpack.io/v/YouAreOnlyOne/MySqlite.svg)](https://www.jitpack.io/#YouAreOnlyOne/MySqlite)
 
 使用自行替换下面的版本号，以获得最新版本。
 
 # 使用体验
 
-1、首先下载容器app，也是主app，这个app可以独立运行，也就是普通的app应用程序，需要下载并安装，下载地址：
+1、下载app，安装之后进行，增删改查操作：
 
-https://github.com/YouAreOnlyOne/LoadApp/blob/master/source/loadapp.apk。
+https://github.com/YouAreOnlyOne/MySqlite/blob/master/source/demo.apk。
     
-安装之后，直接运行，但是只有简单的HelloWorld界面，点击“加载APP”也不会有什么反应，不能够跳转到其它的app，会提示“文件是否存在”。
-
-2、下载另一个需要的app，这个app也可以独立安装，也是一个普通的app应用程序，可以安装也可以不安装（实现双开效果需要安装），但是要把安装包（apk文件）放到手机存储的根目录下面，下载地址：
-
-https://github.com/YouAreOnlyOne/LoadApp/blob/master/source/develop.apk 。
-    
-此时，重新进入主app，点击“加载APP”，就会把这个这一步下载的app加载进去。实现免安装使用。我们我们加载的这个app也是一个独立app，可以进行安装，安装之后就会达到容器里面加载了这个app，本身这个app又可以安装使用，达到应用双开的效果。
+安装之后，直接运行。
     
 
 # 使用方法
@@ -45,7 +39,7 @@ https://github.com/YouAreOnlyOne/LoadApp/blob/master/source/develop.apk 。
 
     dependencies {
             ...
-            implementation 'com.github.YouAreOnlyOne:LoadApp:版本号'
+            implementation 'com.github.YouAreOnlyOne:MySqlite:版本号'
             ...
      }
     
@@ -54,12 +48,8 @@ https://github.com/YouAreOnlyOne/LoadApp/blob/master/source/develop.apk 。
     
  1.第一步，下载依赖的包：
  
-https://github.com/YouAreOnlyOne/LoadApp/blob/master/source/standard-release.aar 。
+https://github.com/YouAreOnlyOne/MySqlite/blob/master/source/mysqlite-release.aar 。
 
-https://github.com/YouAreOnlyOne/LoadApp/blob/master/source/develop-release.aar 。
-
-https://github.com/YouAreOnlyOne/LoadApp/blob/master/source/app-release.aar 。
-    
 并放到项目的 libs 目录下面。
     
  2.第二步,在app的build.gradle下添加如下依赖，注意，两个依赖是平级关系：
@@ -72,9 +62,7 @@ https://github.com/YouAreOnlyOne/LoadApp/blob/master/source/app-release.aar 。
     
     dependencies {
             ...
-            compile(name:'standard-release', ext:'aar')
-            compile(name:'develop-release', ext:'aar')
-            compile(name:'app-release', ext:'aar')
+            compile(name:'mysqlite-release', ext:'aar')
             ...
     }
  
@@ -82,37 +70,74 @@ https://github.com/YouAreOnlyOne/LoadApp/blob/master/source/app-release.aar 。
 	
 # 使用示例：
 
-## 创建容器APP
+1、首先新建一个实体类Person，采用注解的方式进行，如下所示：
+	
+	@DbTable("tb_person")
+public class Person {
+    @DbFiled("tb_name")
+    public String name;
+    @DbFiled("tb_password")
+    public String password;
+    @DbFiled("tb_photo")
+    public byte[] photo;
 
-1、Android环境中随便新建一个普通Android项目（注意添加上面的依赖），在任何一个Activity中，调用下面一行代码即可：
-
-    LoadApp.loadApp(this,new File("app文件的路径"));
-
-
-## 创建其它APP
-
-1、Android环境中随便新建一个普通Android项目（注意添加上面的依赖），新建一个Activity，这个Activity需要继承框架的BaseActivity，该Activity中的所有的上下文环境的this全部用that代替即可，其它没有任何要求，跟普通app开发完全一样。例如下面简单的demo：
-
-	public class MainActivity extends BaseActivity {
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        that.findViewById(R.id.textView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(that,"点击事件成功！",Toast.LENGTH_LONG).show();
-                Intent intent=new Intent(that,SecondActivity.class);
-                startActivity(intent);
-            }
-        });
-      }
+    public String getName() {
+        return name;
     }
-    
-2、编译该应用程序，生成apk。把生成的apk放到手机存储卡里面，或者服务器上面。
 
-3、上面容器APP中，可以读取手机存储卡里面的app文件，也可以从服务器先下载到本地，然后再读取。总之只要活得需要加载的APP的文件路径就可以了。
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+}
+
+2、然后利用工厂在Activity中实例化BaseDao，如下所示：
+
+	BaseDao<Person> baseDao= BaseDaoFactory.getInstance().getBaseDao(Person.class);
+	
+这一行代码不仅实例化BaseDao，也会在数据库中自动创建表。
+
+## 插入数据
+
+	Person person2=new Person();
+               person2.setName("Frank2");
+               person2.setPassword("5202");
+               baseDao.insert(person2);
+	       
+## 查询数据
+
+	Person where=new Person();
+               where.setName("Frank");
+               List<Person> list=baseDao.query(where);
+
+## 更新数据
+
+	Person where=new Person();
+                where.setName("Frank");
+                Person person=new Person();
+                person.setPassword("52014");
+                long result=baseDao.update(person,where);
+
+## 删除数据
+
+	Person where=new Person();
+                where.setName("Frank");
+                long result=baseDao.delete(where);
 	
 	
 
