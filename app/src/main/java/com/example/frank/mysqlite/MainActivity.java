@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         imageView=findViewById(R.id.imageView);
-       baseDao= BaseDaoFactory.getInstance().getBaseDao(Person.class);
+       baseDao= BaseDaoFactory.getInstance(null).getBaseDao(Person.class);
        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {

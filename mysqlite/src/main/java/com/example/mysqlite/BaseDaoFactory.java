@@ -13,18 +13,26 @@ import android.os.Environment;
  * DESCRIPTION:On the description and function of the document
  **/
 public class BaseDaoFactory {
-    private static final BaseDaoFactory instance=new BaseDaoFactory();
-    String sqliteDataBasePath;
-    SQLiteDatabase sqLiteDatabase;
+    //private static  BaseDaoFactory instance=new BaseDaoFactory();
+    private static  BaseDaoFactory instance=null;
+    private String sqliteDataBasePath;
+    private SQLiteDatabase sqLiteDatabase;
 
 
 
-    private BaseDaoFactory(){
-         sqliteDataBasePath= Environment.getExternalStorageDirectory().getAbsolutePath()+"/test.db";
+    private BaseDaoFactory(String mySqliteDataBasePath){
+        if (mySqliteDataBasePath==null||mySqliteDataBasePath.trim().equals("")||!mySqliteDataBasePath.contains(".db")){
+            sqliteDataBasePath= Environment.getExternalStorageDirectory().getAbsolutePath()+"/mysqlite.db";
+        }else {
+            sqliteDataBasePath= mySqliteDataBasePath;
+        }
          sqLiteDatabase=SQLiteDatabase.openOrCreateDatabase(sqliteDataBasePath,null);
     }
 
-    public static BaseDaoFactory getInstance(){
+    public static BaseDaoFactory getInstance(String sqliteDataBasePath){
+        if (instance==null){
+            instance=new BaseDaoFactory(sqliteDataBasePath);
+        }
         return instance;
     }
 
